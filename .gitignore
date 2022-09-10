@@ -2,6 +2,7 @@
 node_modules
 vue.config.js
 deploy.sh
+package-lock.json
 /dist
 /public
 
