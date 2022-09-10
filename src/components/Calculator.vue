@@ -1,37 +1,141 @@
 <template>
   <div class="calculator">
-    <div class="result" style="grid-area: result"></div>
+    <div class="result" style="grid-area: result">
+      {{ result }}
+    </div>
 
     <!-- Operators -->
-    <button style="grid-area: all-clean">AC</button>
-    <button style="grid-area: pos-neg">+/-</button>
-    <button style="grid-area: percent">%</button>
-    <button style="grid-area: plus">+</button>
-    <button style="grid-area: minus">-</button>
-    <button style="grid-area: multiply">×</button>
-    <button style="grid-area: divide">÷</button>
-    <button style="grid-area: equal">=</button>
+    <button style="grid-area: all-clean"
+            @click="clear">AC</button>
+    <button style="grid-area: pos-neg"
+            @click="calculateToggle">+/-</button>
+    <button style="grid-area: percent"
+            @click="calculatePercentage">%</button>
+    <button style="grid-area: plus"
+            @click="append('+')">+</button>
+    <button style="grid-area: minus"
+            @click="append('-')">-</button>
+    <button style="grid-area: multiply"
+            @click="append('*')">×</button>
+    <button style="grid-area: divide"
+            @click="append('/')">÷</button>
+    <button style="grid-area: equal"
+            @click="calculate">=</button>
 
     <!-- digits -->
-    <button style="grid-area: number-1">1</button>
-    <button style="grid-area: number-2">2</button>
-    <button style="grid-area: number-3">3</button>
-    <button style="grid-area: number-4">4</button>
-    <button style="grid-area: number-5">5</button>
-    <button style="grid-area: number-6">6</button>
-    <button style="grid-area: number-7">7</button>
-    <button style="grid-area: number-8">8</button>
-    <button style="grid-area: number-9">9</button>
-    <button style="grid-area: number-0">0</button>
+    <button style="grid-area: number-1"
+            @click="append('1')">1</button>
+    <button style="grid-area: number-2"
+            @click="append('2')">2</button>
+    <button style="grid-area: number-3"
+            @click="append('3')">3</button>
+    <button style="grid-area: number-4"
+            @click="append('4')">4</button>
+    <button style="grid-area: number-5"
+            @click="append('5')">5</button>
+    <button style="grid-area: number-6"
+            @click="append('6')">6</button>
+    <button style="grid-area: number-7"
+            @click="append('7')">7</button>
+    <button style="grid-area: number-8"
+            @click="append('8')">8</button>
+    <button style="grid-area: number-9"
+            @click="append('9')">9</button>
+    <button style="grid-area: number-0"
+            @click="append('0')">0</button>
 
     <!-- decimal mark -->
-    <button style="grid-area: dot-mark">.</button>
+    <button style="grid-area: dot-mark"
+            @click="append('.')">.</button>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Calculator',
+
+  data: function() {
+    return {
+      result: '0',
+      isDecimalAdded: false,
+      isOperatorAdded: false,
+      isStarted: false,
+    }
+  },
+
+  methods: {
+    // When pressing "AC"
+    clear() {
+      this.result = '0';
+      this.isDecimalAdded = false;
+      this.isOperatorAdded = false;
+      this.isStarted = false;
+    },
+
+    // Check if the character is + | - | * | /
+    isOperator(char) {
+      return ['+', '-', '*', '/'].indexOf(char) > -1;
+    },
+
+    // When pressing operator or button with digit
+    append(char) {
+      if (this.result === '0' && !this.isOperator(char)) {
+        if (char === '.') {
+          this.result += '' + char;
+          this.isDecimalAdded = true;
+        } else {
+          this.result = '' + char;
+        }
+        this.isStarted = true;
+        return;
+      }
+
+      // If digit
+      if (!this.isOperator(char)) {
+        if (char === '.' && this.isDecimalAdded) return;
+
+        if (char === '.') {
+          this.isDecimalAdded = true;
+          this.isOperatorAdded = true;
+        } else {
+          this.isOperatorAdded = false;
+        }
+
+        this.result += '' + char;
+      }
+
+      // Add Operator
+      if (this.isOperator(char) && !this.isOperatorAdded) {
+        this.result += '' + char;
+        this.isDecimalAdded = false;
+        this.isOperatorAdded = true;
+      }
+    },
+
+    // When pressing "="
+    calculate() {
+      let result = this.result;
+      this.result = parseFloat(eval(result).toFixed(9)).toString();
+      this.isDecimalAdded = false;
+      this.isOperatorAdded = false;
+    },
+
+    // When pressing "+/-"
+    calculateToggle() {
+      if (this.isOperatorAdded || !this.isStarted || this.result === '0') return;
+
+      this.result += '* - 1';
+      this.calculate();
+    },
+
+    // When pressing "%"
+    calculatePercentage() {
+      if (this.isOperatorAdded || !this.isStarted || this.result === '0') return;
+
+      this.result += '* 0.01';
+      this.calculate();
+    },
+  }
 }
 </script>
 
