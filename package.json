@@ -6,10 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy":  "sh deploy.sh"
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "node-sass": "^7.0.3",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -19,6 +20,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.54.9",
+    "sass-loader": "^10.3.1",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
